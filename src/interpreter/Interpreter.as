@@ -88,6 +88,7 @@ public class Interpreter {
 	private const warpMSecs:int = 500;		// max time to run during warp
 	private var warpThread:Thread;			// thread that is in warp mode
 	private var warpBlock:Block;			// proc call block that entered warp mode
+	private var pushedReporterValue:Boolean = false;
 
 	private var bubbleThread:Thread;			// thread for reporter bubble
 	public var askThread:Thread;				// thread that opened the ask prompt
@@ -577,8 +578,17 @@ public class Interpreter {
 	private function primOldWarpSpeed(b:Block):void {
 		// Semi-support for old warp block: run substack at normal speed.
 		if (b.subStack1 == null) return;
+		var obj:ScratchObj = activeThread.target;
+		var spec:String = b.spec;
+		var proc:Block = obj.procCache[spec];
+		
+		warpBlock = b;
+		warpThread = activeThread;
+		activeThread.firstTime = true;
+		
 		startCmdList(b.subStack1);
 	}
+	
 
 	private function primRepeat(b:Block):void {
 		if (activeThread.firstTime) {

@@ -366,7 +366,7 @@ public class ScratchStage extends ScratchObj {
 				Scratch.app.render3D.getUIContainer().transform.matrix = transform.matrix.clone();
 		}
 
-		return; // scrolling background support is disabled; see note below
+		//return; // scrolling background support is disabled; see note below
 
 		// NOTE: The following code supports the scrolling backgrounds
 		// feature, which was explored but removed before launch.
@@ -401,11 +401,11 @@ public class ScratchStage extends ScratchObj {
 			var insetX:int = Math.max(0, (STAGEW - c.width) / 2);
 			var insetY:int = Math.max(0, (STAGEH - c.height) / 2);
 			if (currentCostume().svgRoot) insetX = insetY = 0;
-			if ((insetX > 0) || (insetY > 0)) {
+			/*if ((insetX > 0) || (insetY > 0)) {
 				m = new Matrix();
 				m.scale(c.scaleX, c.scaleY);
 				m.translate(insetX, insetY);
-			}
+			}*/
 			bm = new BitmapData(sceneW, sceneH, false);
 			bm.draw(c, m);
 		}

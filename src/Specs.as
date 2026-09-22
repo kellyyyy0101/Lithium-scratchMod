@@ -51,7 +51,7 @@ public class Specs {
 
 	public static var variableColor:int = 0xEE7D16; // Scratch 1.4: 0xF3761D
 	public static var listColor:int = 0xCC5B22; // Scratch 1.4: 0xD94D11
-	public static var procedureColor:int = 0x632D99; // 0x531E99;
+	public static var procedureColor:int = 0x632D99; // 0x531E102;
 	public static var parameterColor:int = 0x5947B1;
 	public static var extensionsColor:int = 0x4B4A60; // 0x72228C; // 0x672D79;
 
@@ -73,6 +73,8 @@ public class Specs {
 		[11, "Parameter",	parameterColor],
 		[12, "List",		listColor],
 		[13, "Experimental", 0x4b90b8],
+		[14, "Text",		0x4d840b],
+		[15, "Program",		0x647d71],
 		[20, "Extension",	extensionsColor],
 	];
 
@@ -236,19 +238,26 @@ public class Specs {
 		["wait %n secs",						" ", 6, "wait:elapsed:from:",	1],
 		["-"],
 		["repeat %n",							"c", 6, "doRepeat", 10],
+		["for each %m.var in %n",				"c", 6, "doForLoop", "v", 10],
 		["forever",								"cf",6, "doForever"],
 		["-"],
 		["if %b then",							"c", 6, "doIf"],
 		["if %b then",							"e", 6, "doIfElse"],
 		["wait until %b",						" ", 6, "doWaitUntil"],
 		["repeat until %b",						"c", 6, "doUntil"],
+		["while %b",							"c", 6, "doWhile"],
+		["-"],
+		["all at once",							"c", 6, "warpSpeed"],
 		["-"],
 		["stop %m.stop",						"f", 6, "stopScripts", "all"],
 		["-"],
 		["when I start as a clone",				"h", 6, "whenCloned"],
 		["create clone of %m.spriteOnly",		" ", 6, "createCloneOf"],
 		["delete this clone",					"f", 6, "deleteClone"],
-		["-"],
+		["--"],
+		["counter",								"r", 6, "COUNT"],
+		["clear counter",						" ", 6, "CLR_COUNT"],
+		["incr counter",						" ", 6, "INCR_COUNT"],
 
 		// control - stage
 		["wait %n secs",						" ", 106, "wait:elapsed:from:",	1],
@@ -391,31 +400,35 @@ public class Specs {
 
 		// testing and experimental control prims
 		//["noop",								"r", 99, "COUNT"],
-		["-"],
-		["counter",								"r", 6, "COUNT"],
-		["clear counter",						" ", 6, "CLR_COUNT"],
-		["incr counter",						" ", 6, "INCR_COUNT"],
-		["for each %m.var in %n",				"c", 6, "doForLoop", "v", 10],
-		["while %b",							"c", 6, "doWhile"],
-		["all at once",							"c", 6, "warpSpeed"],
-
+		
 		// stage motion (scrolling)
-		["scroll right %n",						" ", 99, "scrollRight",		10],
-		["scroll up %n",						" ", 99, "scrollUp",		10],
-		["align scene %m.scrollAlign",			" ", 99, "scrollAlign",		'bottom-left'],
-		["x scroll",							"r", 99, "xScroll"],
-		["y scroll",							"r", 99, "yScroll"],
+		["scroll right %n",						" ", 101, "scrollRight",		10],
+		["scroll up %n",						" ", 101, "scrollUp",		10],
+		["align scene %m.scrollAlign",			" ", 101, "scrollAlign",		'bottom-left'],
+		["x scroll",							"r", 101, "xScroll"],
+		["y scroll",							"r", 101, "yScroll"],
 
 		// other obsolete blocks from alpha/beta
 		["hide all sprites",					" ", 102, "hideAll"],
 		["user id",								"r", 99, "getUserId"],
-
-		["set text %s",							" ", 13, "printText"],
-		["set text size to %n",					" ", 13, "setTextSize"],
+		//experimental blocks
+		["set text %s",							" ", 13, "printText", "hello!"],
+		["set text size to %n",					" ", 13, "setTextSize", 14],
 		["set text italic to %b",				" ", 13, "setTextItalic"],
 		["set text bold to %b",					" ", 13, "setTextBold"],
 		["set text colour to %c",				" ", 13, "setTextColour"],
+		["set text wrap %b",					" ", 13, "setTextWrap"],
 		["text size",							"r", 13, "getTextSize"],
 
+		//text and strings
+		["join %s %s %s",						"r", 14, "join:Triple:", "apple ", "banana ", "pear" ],
+		["if %b then %s else %s",				"r", 14, "if:then:else:"],
+		["if %b then %b else %b",				"b", 14, "if:then:bool:"],
+		["text %s",								"r", 14, "returnString", "hello!"],
+
+		//program blocks
+		["toggle turbo mode",					" ", 15, "toggleTurbo"],
+		["set clone limit to %n",				" ", 15, "setCloneLimit"],
+		["clone limit",							"r", 15, "getCloneLimit"]
 	];
 }}

@@ -335,7 +335,7 @@ public class BlockMenus implements DragClient {
 	}
 
 	private function mathOpMenu(evt:MouseEvent):void {
-		var ops:Array = ['abs', 'floor', 'ceiling', 'sqrt', 'sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'ln', 'log', 'e ^', '10 ^'];
+		var ops:Array = ['abs', 'floor', 'ceiling', 'sqrt', 'sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'ln', 'log', 'e ^', '10 ^', 'int'];
 		var m:Menu = new Menu(setBlockArg, 'mathOp');
 		for each (var op:String in ops) m.addItem(op);
 		showMenu(m);

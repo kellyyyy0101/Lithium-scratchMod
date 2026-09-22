@@ -75,10 +75,21 @@ public class PaletteBuilder {
 			var stageSpecific:Array = ['Control', 'Looks', 'Motion', 'Pen', 'Sensing'];
 			if (stageSpecific.indexOf(catName) != -1) selectedCategory += 100;
 			if (catName == 'Motion') {
-				addItem(makeLabel(Translator.map('Stage selected:')));
+				addItem(makeLabel(Translator.map('WARNING')));
 				nextY -= 6;
-				addItem(makeLabel(Translator.map('No motion blocks')));
-				return;
+				addItem(makeLabel(Translator.map('Stage scrolling is experimental.')));
+				nextY -= 6;
+				addItem(makeLabel(Translator.map('USE VECTOR MODE ONLY')));
+				nextY -= 6;
+				addItem(makeLabel(Translator.map('There is a issue that appears when scrolling.')));
+				nextY -= 6;
+				addItem(makeLabel(Translator.map('scrolling. When you scroll, the')));
+				nextY -= 6;
+				addItem(makeLabel(Translator.map('background will appear pixelated.')));
+				nextY -= 6;
+				addItem(makeLabel(Translator.map('This issue MAY be fixed in the future.')));
+				nextY -= 6;
+				//return;
 			}
 		}
 		addBlocksForCategory(selectedCategory, catColor);

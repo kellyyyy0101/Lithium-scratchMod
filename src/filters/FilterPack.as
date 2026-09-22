@@ -34,7 +34,7 @@ import flash.system.Capabilities;
 
 public class FilterPack {
 	public static var filterNames:Array = [
-		"color", "fisheye", "whirl", "pixelate", "mosaic", "brightness", "ghost"];
+		"color", "fisheye", "whirl", "pixelate", "mosaic", "brightness", "ghost", "blur"];
 
 	public var targetObj:ScratchObj;
 	private var filterDict:Object;
@@ -58,6 +58,10 @@ public class FilterPack {
 	[Embed(source="kernels/whirl.pbj", mimeType="application/octet-stream")]
 	private var WhirlKernel:Class;
 	private var whirlShader:Shader = new Shader(new WhirlKernel());
+
+	/*[Embed(source="kernels/blur.pbj", mimeType="application/octet-stream")]
+	private var BlurKernel:Class;
+	private var blurShader:Shader = new Shader(new BlurKernel());*/
 
 	public function FilterPack(targetObj:ScratchObj) {
 		this.targetObj = targetObj;
@@ -165,6 +169,13 @@ public class FilterPack {
 			hsvShader.data.hueShift.value = [n];
 			newFilters.push(new ShaderFilter(hsvShader));
 		}
+		/*if (filterDict["blur"] != 0) {
+			n = (Math.abs(filterDict["blur"]) / 10) + 1;
+			//if (targetObj == Scratch.app.stagePane) n *= Scratch.app.stagePane.scaleX;
+			n = Math.min(n, Math.min(srcWidth, srcHeight));
+			blurShader.data.pixelSize.value = [n];
+			newFilters.push(new ShaderFilter(blurShader));
+		}*/
 		return newFilters;
 	}
 }}

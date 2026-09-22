@@ -27,15 +27,19 @@ package primitives {
 	import flash.utils.Dictionary;
 	import blocks.*;
 	import interpreter.*;
-	import scratch.ScratchSprite;
+	import scratch.*;
+	import ui.*;
+	import ui.media.*;
+	import ui.parts.*;
 	import translation.Translator;
 
 public class Primitives {
 
-	private const MaxCloneCount:int = 300;
+	private var MaxCloneCount:int = 300;
 
 	protected var app:Scratch;
 	protected var interp:Interpreter;
+	protected var stagePart:StagePart;
 	private var counter:int;
 
 	public function Primitives(app:Scratch, interpreter:Interpreter) {
@@ -86,8 +90,16 @@ public class Primitives {
 
 		primTable["newlinechar"]		= function(b:*):* { return "\n" }; 
 
-		primTable["getColourInput"]		= function(b:*):* { return interp.arg(b, 0)};
+		primTable["getColourInput"]		= function(b:*):* { return interp.numarg(b, 0)};
 
+		primTable["join:Triple:"]		=function(b:*):* { return ("" + interp.arg(b, 0) + interp.arg(b, 1) + interp.arg(b, 2)).substr(0, 10240); };
+		primTable["if:then:else:"]		= primIfElse;
+		primTable["if:then:bool:"]		= primIfElseBool;
+		primTable["returnString"]		= function(b:*):* {return(interp.arg(b,0))};
+
+		primTable["toggleTurbo"]		= primTurbo;//function(b:*):* { interp.turboMode = !interp.turboMode };
+		primTable["setCloneLimit"]		= function(b:*):* { MaxCloneCount = interp.numarg(b, 0) };
+		primTable["getCloneLimit"]		= function(b:*):* { return MaxCloneCount };
 		new LooksPrims(app, interp).addPrimsTo(primTable);
 		new MotionAndPenPrims(app, interp).addPrimsTo(primTable);
 		new SoundPrims(app, interp).addPrimsTo(primTable);
@@ -239,5 +251,28 @@ public class Primitives {
 	private function primShowText(b:Block):void
 	{
 		
+	}
+
+	private function primIfElse(b:Block):String{
+		if (interp.boolarg(b,0) == true){
+			return interp.arg(b,1);
+		}else{
+			return interp.arg(b,2);
+		}
+	}
+
+	private function primIfElseBool(b:Block):*
+	{
+		if (interp.boolarg(b,0) == true){
+			return interp.boolarg(b,1);
+		}else{
+			return interp.boolarg(b,2);
+		}
+	}
+
+	private function primTurbo(b:Block):void
+	{
+		interp.turboMode = !interp.turboMode;
+		Scratch.app.stagePart.refresh();
 	}
 }}

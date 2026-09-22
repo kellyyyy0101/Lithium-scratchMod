@@ -62,6 +62,7 @@ public class LooksPrims {
 		primTable["setTextItalic"]					= function(b:*):* { setTextFormatItalic(interp.boolarg(b, 0))};
 		primTable["setTextBold"]					= function(b:*):* { setTextFormatBold(interp.boolarg(b, 0))};
 		primTable["setTextColour"]					= function(b:*):* { setTextFormatColour(interp.arg(b, 0))};
+		primTable["setTextWrap"]					= function(b:*):* { setTextWrap(interp.boolarg(b, 0))};
 		primTable["getTextSize"]					= function(b:*):* { return TalkBubble.textSize};
 
 		primTable['changeGraphicEffect:by:'] = primChangeEffect;
@@ -83,11 +84,11 @@ public class LooksPrims {
 		primTable['setVideoState']			= primSetVideoState;
 		primTable['setVideoTransparency']	= primSetVideoTransparency;
 
-//		primTable['scrollAlign']			= primScrollAlign;
-//		primTable['scrollRight']			= primScrollRight;
-//		primTable['scrollUp']				= primScrollUp;
-//		primTable['xScroll']				= function(b:*):* { return app.stagePane.xScroll };
-//		primTable['yScroll']				= function(b:*):* { return app.stagePane.yScroll };
+		primTable['scrollAlign']			= primScrollAlign;
+		primTable['scrollRight']			= primScrollRight;
+		primTable['scrollUp']				= primScrollUp;
+		primTable['xScroll']				= function(b:*):* { return app.stagePane.xScroll };
+		primTable['yScroll']				= function(b:*):* { return app.stagePane.yScroll };
 
 		primTable['setRotationStyle']		= primSetRotationStyle;
 	}
@@ -212,6 +213,11 @@ public class LooksPrims {
 	private function setTextFormatItalic(textFormatItalic:Boolean = false):void{
 		var s:ScratchSprite = interp.targetSprite();
 		s.setBubbleItalic(textFormatItalic);
+	}
+
+	private function setTextWrap(textFormatWrap:Boolean = false):void{
+		var s:ScratchSprite = interp.targetSprite();
+		s.setTextWrap(textFormatWrap)
 	}
 
 	private function primChangeEffect(b:Block):void {

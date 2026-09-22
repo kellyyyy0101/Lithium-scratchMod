@@ -105,8 +105,8 @@ public class Scratch extends Sprite {
 	public var projectIsPrivate:Boolean;
 	public var oldWebsiteURL:String = '';
 	public var loadInProgress:Boolean;
-	public var debugOps:Boolean = false;
-	public var debugOpCmd:String = '';
+	public var debugOps:Boolean = true;
+	public var debugOpCmd:String = 'debugOpCmd';
 
 	protected var autostart:Boolean;
 	private var viewedObject:ScratchObj;
@@ -127,7 +127,7 @@ public class Scratch extends Sprite {
 	// UI Parts
 	public var libraryPart:LibraryPart;
 	protected var topBarPart:TopBarPart;
-	protected var stagePart:StagePart;
+	public var stagePart:StagePart;
 	private var tabsPart:TabsPart;
 	protected var scriptsPart:ScriptsPart;
 	public var imagesPart:ImagesPart;
@@ -1088,7 +1088,7 @@ public class Scratch extends Sprite {
 			m.addItem('Save Project Summary', saveSummary);
 			m.addItem('Show version details', showVersionDetails);
 		}
-		if (b.lastEvent.shiftKey && jsEnabled) {
+		if (b.lastEvent.shiftKey){//&& jsEnabled) {
 			m.addLine();
 			m.addItem('Import experimental extension', function ():void {
 				function loadJSExtension(dialog:DialogBox):void {
@@ -1102,6 +1102,29 @@ public class Scratch extends Sprite {
 				d.addField('URL', 120);
 				d.addAcceptCancelButtons('Load');
 				d.showOnStage(app.stage);
+			});
+			m.addItem("Import experimental HTTP extension",function():void
+            {
+               loadSingleFile(function(param1:Event):void
+               {
+                  var _loc2_:Object = null;
+                  try
+                  {
+                     _loc2_ = util.JSON.parse(FileReference(param1.target).data.toString());
+                  }
+                  catch(e:*)
+                  {
+                  }
+                  if(!_loc2_ || !("extensionName" in _loc2_) || !("extensionPort" in _loc2_))
+                  {
+                     return;
+                  }
+                  if(!_loc2_.blockSpecs)
+                  {
+                     _loc2_.blockSpecs = [];
+                  }
+                  extensionManager.loadRawExtension(_loc2_);
+               });
 			});
 		}
 		

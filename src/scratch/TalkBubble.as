@@ -47,6 +47,7 @@ public class TalkBubble extends Sprite {
 	public static var textColour:uint = 0;
 	public static var textBold:Boolean = false;
 	public static var textItalic:Boolean = false;
+	public static var textWrap:Boolean = false
 	
 	
 
@@ -124,7 +125,7 @@ public class TalkBubble extends Sprite {
 			result.x = padding;
 			result.y = padding;
 		}else{
-			result.wordWrap = false;
+			result.wordWrap = textWrap;
 			result.defaultTextFormat = spriteTextFormat;
 			result.x = 0
 			result.y = 0

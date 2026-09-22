@@ -1,0 +1,38 @@
+<languageVersion : 1.0;>
+
+kernel BoxBlur
+<   namespace : "filters";
+    vendor : "Developer";
+    version : 1;
+    description : "A custom blur filter matching the app parameters.";
+>
+{
+    input image4 src;
+    output pixel4 dst;
+
+    // Parameter changed to match your AS3 code: blurShader.data.pixelSize
+    parameter float pixelSize
+    <
+        minValue: 0.0;
+        maxValue: 100.0;
+        defaultValue: 1.0;
+    >;
+
+    void evaluatePixel()
+    {
+        float2 uv = outCoord();
+        
+        // Use sampleLinear for smooth scaling animations in the Scratch stage
+        pixel4 color0 = sampleLinear(src, uv);
+        pixel4 color1 = sampleLinear(src, uv + float2(pixelSize, 0.0));
+        pixel4 color2 = sampleLinear(src, uv - float2(pixelSize, 0.0));
+        pixel4 color3 = sampleLinear(src, uv + float2(0.0, pixelSize));
+        pixel4 color4 = sampleLinear(src, uv - float2(0.0, pixelSize));
+        
+        float3 colorSum = color0.rgb + color1.rgb + color2.rgb + color3.rgb + color4.rgb;
+        float alphaAverage = (color0.a + color1.a + color2.a + color3.a + color4.a) / 5.0;
+        
+        dst.rgb = colorSum / 5.0;
+        dst.a = alphaAverage;
+    }
+}

@@ -650,6 +650,11 @@ public class ScratchSprite extends ScratchObj {
 		TalkBubble.textItalic = formatItalic;
 	}
 
+	public function setTextWrap(formatWrap:Boolean):void
+	{
+		TalkBubble.textWrap = formatWrap;
+	}
+
 
 
 	private function bubbleRect():Rectangle {

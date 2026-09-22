@@ -204,7 +204,7 @@ public class Block extends Sprite {
 		} else if (op == Specs.GET_VAR || op == Specs.GET_LIST) {
 			labelsAndArgs = [makeLabel(spec)];
 		} else {
-			const loopBlocks:Array = ['doForever', 'doForeverIf', 'doRepeat', 'doUntil'];
+			const loopBlocks:Array = ['doForever', 'doForeverIf', 'doRepeat', 'doUntil', 'doWhile'];
 			base.hasLoopArrow = (loopBlocks.indexOf(op) >= 0);
 			addLabelsAndArgs(spec, base.color);
 		}
