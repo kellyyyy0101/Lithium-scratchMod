@@ -32,8 +32,8 @@ package ui {
 public class PaletteSelector extends Sprite {
 
 	private static const categories:Array = [
-		'Motion', 'Looks', 'Sound', 'Pen', 'Data', 'Program', 'Experimental', // column 1
-		'Events', 'Control', 'Sensing', 'Operators', 'Text', 'More Blocks']; // column 2
+		'Motion', 'Looks', 'Sound', 'Pen', 'Data', 'Program', 'Experimental',// column 1
+		'Events', 'Control', 'Sensing', 'Operators', 'Text', 'Temp', 'More Blocks']; // column 2
 
 	public var selectedCategory:int = 0;
 	private var app:Scratch;

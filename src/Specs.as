@@ -53,7 +53,7 @@ public class Specs {
 	public static var listColor:int = 0xCC5B22; // Scratch 1.4: 0xD94D11
 	public static var procedureColor:int = 0x632D99; // 0x531E102;
 	public static var parameterColor:int = 0x5947B1;
-	public static var extensionsColor:int = 0x4B4A60; // 0x72228C; // 0x672D79;
+	public static var extensionsColor:int = 0x4B4A60; // 0x72228C; // 672D79;
 
 	private static const undefinedColor:int = 0xD42828;
 
@@ -74,7 +74,9 @@ public class Specs {
 		[12, "List",		listColor],
 		[13, "Experimental", 0x4b90b8],
 		[14, "Text",		0x4d840b],
-		[15, "Program",		0x647d71],
+		[15, "Program",		0x43544c],
+		[16, "Temp",		0x20a375],
+		//[21, "local",		0x6a65c2], for some reason, I can't add new categories
 		[20, "Extension",	extensionsColor],
 	];
 
@@ -429,6 +431,13 @@ public class Specs {
 		//program blocks
 		["toggle turbo mode",					" ", 15, "toggleTurbo"],
 		["set clone limit to %n",				" ", 15, "setCloneLimit"],
-		["clone limit",							"r", 15, "getCloneLimit"]
+		["clone limit",							"r", 15, "getCloneLimit"],
+
+		/*["var %s",								"r", 16, "tempVar"],
+		["set %s to %s",						" ", 16, "setTempVar"],
+		["change %s by %n",						" ", 16, "changeTempVar"],
+		["create var %s",						" ", 16, "createTempVar"]*/
+
+		
 	];
 }}

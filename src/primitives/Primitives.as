@@ -41,6 +41,7 @@ public class Primitives {
 	protected var interp:Interpreter;
 	protected var stagePart:StagePart;
 	private var counter:int;
+	private var tempVars:Array = [{name:" ", value:"2"},];//empty at the start
 
 	public function Primitives(app:Scratch, interpreter:Interpreter) {
 		this.app = app;
@@ -100,6 +101,11 @@ public class Primitives {
 		primTable["toggleTurbo"]		= primTurbo;//function(b:*):* { interp.turboMode = !interp.turboMode };
 		primTable["setCloneLimit"]		= function(b:*):* { MaxCloneCount = interp.numarg(b, 0) };
 		primTable["getCloneLimit"]		= function(b:*):* { return MaxCloneCount };
+
+		primTable["tempVar"]			= primGetTempVar;
+		primTable["createTempVar"]		= function(b:*):* { tempVars.push({name:interp.arg(b, 0), value:""}) };
+		primTable["setTempVar"]			= primSetTempVar;
+		primTable["changeTempVar"]			= primChangeTempVar;
 		new LooksPrims(app, interp).addPrimsTo(primTable);
 		new MotionAndPenPrims(app, interp).addPrimsTo(primTable);
 		new SoundPrims(app, interp).addPrimsTo(primTable);
@@ -274,5 +280,74 @@ public class Primitives {
 	{
 		interp.turboMode = !interp.turboMode;
 		Scratch.app.stagePart.refresh();
+	}
+
+	/*
+	temp vars are NOT actually tenp vars. This is a primitive(no pun intended) way of dictionaries
+	for now, this way of looping through the object doesn't work. 
+	if this gets implemented again, this need to be fixed
+	*/
+
+	private function primGetTempVar(b:Block):*
+	{
+		
+		var targetIndex:int = -1; // -1 means "not found"
+
+		// 1. Loop using numerical index positions
+		for (var i:int = 0; i < tempVars.length; i++) 
+		{
+			// Check if the name matches at this specific index
+			if (tempVars[i].name == interp.arg(b, 0)) 
+			{
+				targetIndex = i; // Save the index number!
+				break;           // Stop looping immediately since we found it
+			}
+		}
+
+		// 2. If we found a valid index, return the value using that index
+		if (targetIndex != -1) 
+		{
+			//trace("Found match at index position: " + targetIndex);
+			return tempVars[targetIndex].value; 
+		}
+		
+		//trace("Name not found in array.");
+		return null;
+
+	}
+
+	private function primSetTempVar(b:Block):void
+	{
+		var targetIndex:int = -1; // -1 means "not found"
+
+		// 1. Loop using numerical index positions
+		for (var i:int = 0; i < tempVars.length; i++) 
+		{
+			// Check if the name matches at this specific index
+			if (tempVars[i].name == interp.arg(b, 0)) 
+			{
+				targetIndex = i; // Save the index number!
+				break;           // Stop looping immediately since we found it
+			}
+		}
+
+		// 2. If we found a valid index, return the value using that index
+		if (targetIndex != -1) 
+		{
+			//trace("Found match at index position: " + targetIndex);
+			tempVars[targetIndex] = interp.arg(b, 1)
+		}
+		
+		//trace("Name not found in array.");
+		//return null;
+	}
+
+	private function primChangeTempVar(b:Block):void
+	{
+		/*for each (var item:String in tempVars.value) {
+			if (item == interp.arg(b, 0)) {
+				break;//return(item.value);
+			}
+		}*/
 	}
 }}

@@ -142,7 +142,6 @@ public class Scratch extends Sprite {
 		SVGTool.setStage(stage);
 		loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, uncaughtErrorHandler);
 		app = this;
-
 		// This one must finish before most other queries can start, so do it separately
 		determineJSAccess();
 	}
@@ -1090,7 +1089,7 @@ public class Scratch extends Sprite {
 		}
 		if (b.lastEvent.shiftKey){//&& jsEnabled) {
 			m.addLine();
-			m.addItem('Import experimental extension', function ():void {
+			/*m.addItem('Import experimental extension', function ():void {
 				function loadJSExtension(dialog:DialogBox):void {
 					var url:String = dialog.getField('URL').replace(/^\s+|\s+$/g, '');
 					if (url.length == 0) return;
@@ -1102,28 +1101,28 @@ public class Scratch extends Sprite {
 				d.addField('URL', 120);
 				d.addAcceptCancelButtons('Load');
 				d.showOnStage(app.stage);
-			});
+			});*/
 			m.addItem("Import experimental HTTP extension",function():void
             {
                loadSingleFile(function(param1:Event):void
                {
-                  var _loc2_:Object = null;
+                  var extLoaded:Object = null;
                   try
                   {
-                     _loc2_ = util.JSON.parse(FileReference(param1.target).data.toString());
+                     extLoaded = util.JSON.parse(FileReference(param1.target).data.toString());
                   }
                   catch(e:*)
                   {
                   }
-                  if(!_loc2_ || !("extensionName" in _loc2_) || !("extensionPort" in _loc2_))
+                  if(!extLoaded || !("extensionName" in extLoaded) || !("extensionPort" in extLoaded))
                   {
                      return;
                   }
-                  if(!_loc2_.blockSpecs)
+                  if(!extLoaded.blockSpecs)
                   {
-                     _loc2_.blockSpecs = [];
+                     extLoaded.blockSpecs = [];
                   }
-                  extensionManager.loadRawExtension(_loc2_);
+                  extensionManager.loadRawExtension(extLoaded);
                });
 			});
 		}
@@ -1132,7 +1131,7 @@ public class Scratch extends Sprite {
 
 	public function enableExperimentalBlocks():void {
 		if (experimentEnabled == true){
-			//dialogBox.notify('WARNING', "Experimental blocks can be found in the experimental category. \n EXPERIMENTS ARE PRONE TO BUGS AND UNFINISHED.\n THEY MIGHT BE ADDED IN A FUTURE UPDATE")
+			DialogBox.notify('WARNING', "Experimental blocks can be found in the experimental category. \n EXPERIMENTS ARE PRONE TO BUGS AND UNFINISHED.\n THEY MIGHT BE ADDED IN A FUTURE UPDATE")
 		}
 		experimentEnabled = !experimentEnabled
 	}

@@ -28,6 +28,8 @@ import translation.Translator;
 import uiwidgets.Button;
 import uiwidgets.DialogBox;
 
+import util.*;
+
 public class ExtensionDevManager extends ExtensionManager {
 
 	public var localExt:ScratchExtension = null;
@@ -87,11 +89,30 @@ public class ExtensionDevManager extends ExtensionManager {
 		}
 		button.setEventAction(function (evt:MouseEvent):void {
 			if (evt.shiftKey) {
-				showShiftMenu(evt);
+				//showShiftMenu(evt);
 			} else {
 				//Scratch.app.setModalOverlay(true);
 				//Scratch.app.externalCall('JSshowExtensionDialog');
-				showShiftMenu(evt);
+				//showShiftMenu(evt);
+				Scratch.loadSingleFile(function(param1:Event):void{
+					var extLoaded:Object = null;
+					try
+					{
+						extLoaded = util.JSON.parse(FileReference(param1.target).data.toString());
+					}
+					catch(e:*)
+					{
+					}
+					if(!extLoaded || !("extensionName" in extLoaded) || !("extensionPort" in extLoaded))
+					{
+						return;
+					}
+					if(!extLoaded.blockSpecs)
+					{
+						extLoaded.blockSpecs = [];
+					}
+					app.extensionManager.loadRawExtension(extLoaded);
+				})
 			}
 		});
 

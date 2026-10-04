@@ -43,6 +43,8 @@ import ui.parts.UIPart;
 
 import uiwidgets.*;
 
+import util.*;
+
 public class PaletteBuilder {
 
 	protected var app:Scratch;
@@ -81,7 +83,7 @@ public class PaletteBuilder {
 				nextY -= 6;
 				addItem(makeLabel(Translator.map('USE VECTOR MODE ONLY')));
 				nextY -= 6;
-				addItem(makeLabel(Translator.map('There is a issue that appears when scrolling.')));
+				addItem(makeLabel(Translator.map('There is a issue that appears when')));
 				nextY -= 6;
 				addItem(makeLabel(Translator.map('scrolling. When you scroll, the')));
 				nextY -= 6;
@@ -164,14 +166,14 @@ public class PaletteBuilder {
 		addAddExtensionButton();
 		if (Scratch.app.isExtensionDevMode) {
 			var extensionDevManager:ExtensionDevManager = Scratch.app.extensionManager as ExtensionDevManager;
-			if (extensionDevManager) {
+			/*if (extensionDevManager) {
 				addItem(extensionDevManager.makeLoadExperimentalExtensionButton());
-			}
+			}*/
 		}
 	}
 
 	protected function addAddExtensionButton():void {
-		addItem(new Button(Translator.map('Add an Extension'), showAnExtension, false, '/help/studio/tips/blocks/add-an-extension/'));
+		addItem(new Button(Translator.map('Import Experimental Extension'), showAnExtension, false, '/help/studio/tips/blocks/add-an-extension/'));
 	}
 
 	private function showDataCategory():void {
@@ -286,7 +288,7 @@ public class PaletteBuilder {
 	}
 
 	private function showAnExtension():void {
-		function addExt(ext:ScratchExtension):void {
+		/*function addExt(ext:ScratchExtension):void {
 			if (ext.isInternal) {
 				app.extensionManager.setEnabled(ext.name, true);
 			} else {
@@ -296,7 +298,26 @@ public class PaletteBuilder {
 		}
 
 		var lib:MediaLibrary = app.getMediaLibrary('extension', addExt);
-		lib.open();
+		lib.open();*/
+		Scratch.loadSingleFile(function(param1:Event):void{
+            var extLoaded:Object = null;
+            try
+            {
+                extLoaded = util.JSON.parse(FileReference(param1.target).data.toString());
+            }
+            catch(e:*)
+            {
+            }
+            if(!extLoaded || !("extensionName" in extLoaded) || !("extensionPort" in extLoaded))
+            {
+                return;
+            }
+            if(!extLoaded.blockSpecs)
+            {
+                extLoaded.blockSpecs = [];
+            }
+            app.extensionManager.loadRawExtension(extLoaded);
+        })
 	}
 
 	protected function addReporterCheckbox(block:Block):void {
