@@ -615,11 +615,19 @@ public class ExtensionManager {
 
 	private function httpRequest(ext:ScratchExtension, op:String, args:Array, b:Block):void {
 		function responseHandler(e:Event):void {
-			if(e.type == Event.COMPLETE)
-				b.response = loader.data;
-			else
+			if(e.type == Event.COMPLETE){
+				var preRegex:RegExp = /<pre[^>]*>([\s\S]*?)<\/pre>/i;
+    
+				// Execute the search on the HTML string
+				var match:Object = preRegex.exec(loader.data);
+				
+				// Check if a match was found
+				// match[1] contains the text inside the first capture group (the parenthesis)
+				var responseText:String = match[1];
+				b.response = responseText;
+			}else{
 				b.response = '';
-
+			}
 			b.requestState = 2;
 			b.requestLoader = null;
 		}
@@ -744,6 +752,12 @@ public class ExtensionManager {
 					if (ext.busy.indexOf(id) == -1) ext.busy.push(id);
 				}
 				break;
+			/*case '_result':
+				for each (var token:String in value.split(' ')) {
+					var id:int = parseInt(token);
+					if (ext.busy.indexOf(id) == -1) ext.busy.push(id);
+				}
+				break;*/
 			case '_problem':
 				ext.problem = value;
 				break;
