@@ -75,8 +75,8 @@ public class Specs {
 		[13, "Experimental", 0x4b90b8],
 		[14, "Text",		0x4d840b],
 		[15, "Program",		0x43544c],
-		[16, "Temp",		0x20a375],
-		//[21, "local",		0x6a65c2], for some reason, I can't add new categories
+		[16, "Network&Misc",		0xbdc0f7],
+		[17, "Local\nConnection", 0x17576d],
 		[20, "Extension",	extensionsColor],
 	];
 
@@ -307,6 +307,8 @@ public class Specs {
 		["-"],
 		["set drag mode undraggable",				" ", 7, "setDragUndrag"],
 		["set drag mode draggable",			" ", 7, "setDragDrag"],
+		["--"],
+
 
 		// stage sensing
 		["ask %s and wait",						" ", 107, "doAsk", 				"What's your name?"],
@@ -331,6 +333,8 @@ public class Specs {
 		["current %m.timeAndDate", 				"r", 107, "timeAndDate",		"minute"],
 		["days since 2000", 					"r", 107, "timestamp"],
 		["username",							"r", 107, "getUserName"],
+		["--"],
+		
 
 		// operators
 		["%n + %n",								"r", 8, "+",					"", ""],
@@ -414,25 +418,45 @@ public class Specs {
 		["hide all sprites",					" ", 102, "hideAll"],
 		["user id",								"r", 99, "getUserId"],
 		//experimental blocks
-		["set text %s",							" ", 13, "printText", "hello!"],
-		["set text size to %n",					" ", 13, "setTextSize", 14],
-		["set text italic to %b",				" ", 13, "setTextItalic"],
-		["set text bold to %b",					" ", 13, "setTextBold"],
-		["set text colour to %c",				" ", 13, "setTextColour"],
-		["set text wrap %b",					" ", 13, "setTextWrap"],
-		["text size",							"r", 13, "getTextSize"],
+		["set text %s",							" ", 2, "printText", "hello!"],
+		["set text size to %n",					" ", 2, "setTextSize", 14],
+		["set text italic to %b",				" ", 2, "setTextItalic"],
+		["set text bold to %b",					" ", 2, "setTextBold"],
+		["set text colour to %c",				" ", 2, "setTextColour"],
+		["set text wrap %b",					" ", 2, "setTextWrap"],
+		["text size",							"r", 2, "getTextSize"],
+		["--"],
+		["exec js from file %s",				" ", 13, "execJs"],
 
 		//text and strings
 		["join %s %s %s",						"r", 14, "join:Triple:", "apple ", "banana ", "pear" ],
 		["if %b then %s else %s",				"r", 14, "if:then:else:"],
 		["if %b then %b else %b",				"b", 14, "if:then:bool:"],
 		["text %s",								"r", 14, "returnString", "hello!"],
+		["-"],
+		/*["letters %n to %n of %s",				"r", 14, "letters:to:of:",		1, 3, "world"],
+		["%s contains %s",						"b", 14, ":contains:",			"haystack", "needle"],
+		["%m.stringAlter %s",					"r", 14, "alterString",			"uppercase", "meow"],
+		["-"],
+		["times %s is in %s",					"r", 14, "times:isIn:",			"a", "raincoat"],
+		["replace letters %n to %n of %s with %s", "r", 14, "replaceBetween",	2, 4, "crust", "a"],
+		["replace every %s in %s with %s",		"r", 14, "replaceEvery",			"m", "mat", "c"],
+		["repeat %s %n times",					"r", 14, "repeat::times",		"do", 2],
+		["-"],
+		["ascii for %s",						"r", 14, "asciiFor:",			"A"],
+		["ascii %n as string",					"r", 14, "ascii:asString",		"65"],*/
+
 
 		//program blocks
 		["toggle turbo mode",					" ", 15, "toggleTurbo"],
 		["set clone limit to %n",				" ", 15, "setCloneLimit"],
 		["clone limit",							"r", 15, "getCloneLimit"],
 
+		["online?",								"b", 16, "onlineStatus"],
+		["--"],
+		["random joke",							"r", 16, "randomJoke"],
+		["random phrase",							"r", 16, "randomPhrase"],
+		//old temp blocks
 		/*["var %s",								"r", 16, "tempVar"],
 		["set %s to %s",						" ", 16, "setTempVar"],
 		["change %s by %n",						" ", 16, "changeTempVar"],

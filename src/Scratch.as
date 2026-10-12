@@ -138,6 +138,8 @@ public class Scratch extends Sprite {
 
 	public var experimentEnabled:Boolean = true;
 
+	public var advancedJS:Boolean = true;
+
 	public function Scratch() {
 		SVGTool.setStage(stage);
 		loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, uncaughtErrorHandler);
@@ -1606,6 +1608,38 @@ public class Scratch extends Sprite {
 		var args:Array = jsCallbackArray.concat(); // clone
 		args.splice(1, 0, returnValueCallback);
 		externalCall.apply(this, args);
+	}
+
+	public function callJsFunction(functionName:String, ...args):void {
+		var lc:LocalConnection = new LocalConnection();
+		
+		// 1. Package the function name and arguments normally
+		var payload:Object = {
+			functionName: functionName,
+			args: args
+		};
+		
+		// 2. Convert the entire package into a primitive string 
+		// This bypasses LocalConnection data truncation completely!
+		var jsonEngine:Object = this.loaderInfo.applicationDomain.getDefinition("JSON");
+		var jsonPayload:String = jsonEngine.stringify(payload);
+		
+		// 3. Send the string over the connection
+		lc.send("_AirBridge", "receiveFromProjectSwf", jsonPayload);
+	}
+
+
+	public function receiveFromAirBridge(dataPayload:Object):void {
+		var funcName:String = dataPayload.functionName;
+		var argsArray:Array = dataPayload.args as Array;
+		
+		// Check if the function exists locally inside this SWF's timeline / class context
+		if (this.hasOwnProperty(funcName) && this[funcName] is Function) {
+			// Unpack arguments and call your existing ActionScript function
+			this[funcName].apply(this, argsArray);
+		} else {
+			trace("Error: This SWF does not have an AS3 function named: " + funcName);
+    	}
 	}
 }
 }

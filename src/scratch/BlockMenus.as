@@ -29,6 +29,9 @@ import flash.events.*;
 import flash.geom.*;
 import flash.ui.*;
 
+import flash.utils.setTimeout;
+
+
 import sound.*;
 
 import translation.Translator;
@@ -378,11 +381,21 @@ public class BlockMenus implements DragClient {
 	}
 
 	private function sensorMenu(evt:MouseEvent):void {
+
+		//picoboard sensor menu
 		var sensorNames:Array = [
 			'slider', 'light', 'sound',
 			'resistance-A', 'resistance-B', 'resistance-B', 'resistance-C', 'resistance-D'];
 		var m:Menu = new Menu(setBlockArg, 'sensor');
+		//var globalVars:Array = app.stageObj().varNames();
+		
 		for each (var s:String in sensorNames) m.addItem(s);
+		m.addLine();
+		//global variables
+		var globalVars:Array = app.stageObj().varNames().sort(Array.CASEINSENSITIVE);
+
+		for each (var vName:String in globalVars) m.addItem(vName);
+
 		showMenu(m);
 	}
 

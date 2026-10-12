@@ -1,0 +1,1 @@
+{"extensionName": "Weather Extension", "extensionPort": 12345, "blockSpecs": [["R", "%m.weather in %s", "get_weather_data", "temperature", "Boston"]], "menus": {"weather": ["temperature", "humidity", "wind speed"]}}

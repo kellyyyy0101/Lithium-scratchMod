@@ -32,6 +32,19 @@ package primitives {
 	import ui.media.*;
 	import ui.parts.*;
 	import translation.Translator;
+	import flash.utils.ByteArray;
+
+	import com.adobe.utils.StringUtil;
+
+	import flash.errors.IllegalOperationError;
+	import flash.events.*;
+	import flash.net.*;
+
+	import mx.utils.URLUtil;
+
+	import uiwidgets.DialogBox;
+
+	import util.*;
 
 public class Primitives {
 
@@ -43,10 +56,23 @@ public class Primitives {
 	private var counter:int;
 	private var tempVars:Array = [{name:" ", value:"2"},];//empty at the start
 
+	private var peerMeshCache:Object = {}; // Caches values received from other instances
+	private const MESH_PORT:int = 14321;   // Port for mesh
+
+	private var receiverConn:LocalConnection;
+	private var senderConn:LocalConnection;
+	private var instanceID:String;
+
 	public function Primitives(app:Scratch, interpreter:Interpreter) {
 		this.app = app;
 		this.interp = interpreter;
+
 	}
+
+	private var activeListeningHubID:int = -1;
+
+	
+	
 
 	public function addPrimsTo(primTable:Dictionary):void {
 		// operators
@@ -106,6 +132,105 @@ public class Primitives {
 		primTable["createTempVar"]		= function(b:*):* { tempVars.push({name:interp.arg(b, 0), value:""}) };
 		primTable["setTempVar"]			= primSetTempVar;
 		primTable["changeTempVar"]			= primChangeTempVar;
+		
+		primTable["onlineStatus"]		= function(b:*):* {return true};
+
+		primTable["randomJoke"]			= primRandomJoke
+
+		primTable["randomPhrase"]		= function(b:*):* {return 0};
+
+		primTable["execJs"]				= function(b:*):* {app.callJsFunction("execJs", interp.arg(b, 0))};
+
+		/*primTable["fetchUrl"]			= function(b:*):* {
+			function responseHandler(e:Event):void {
+				if(e.type == Event.COMPLETE){
+					b.response = responseText;
+				}else{
+					b.response = '';
+				}
+				b.requestState = 2;
+				b.requestLoader = null;
+			}
+
+			var loader:URLLoader = new URLLoader();
+			loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, responseHandler);
+			loader.addEventListener(IOErrorEvent.IO_ERROR, responseHandler);
+			loader.addEventListener(Event.COMPLETE, responseHandler);
+
+			b.requestState = 1;
+			b.requestLoader = loader;
+
+			var url:String = 'http://' + interp.arg(b,0);
+			loader.load(new URLRequest(url));}*/
+
+
+		/*primTable["letters:to:of:"]		= primLettersBetween;
+		primTable["alterString"]		= primAlterString;
+		primTable["caseSensitive"]		= function(b:*):Boolean { return (interp.arg(b, 0) == interp.arg(b, 1)) };
+		primTable["asciiFor:"]			= function(b:*):* { return interp.arg(b, 0).charCodeAt(0) };
+		primTable["ascii:asString"]		= function(b:*):* { return String.fromCharCode(interp.numarg(interp.arg(b, 0))) };
+		primTable[":contains:"]			= function(b:*):Boolean {
+				var a:* = interp.arg(b, 0);
+				if(a.indexOf(interp.arg(b, 1)) >= 0){
+					return true;
+				} else {
+					return false;
+				}
+			}
+		primTable["times:isIn:"]		= function(b:*):* {
+				var str:String = interp.arg(b, 1);
+				var char:String = interp.arg(b, 0);
+
+				function countOccurences(str:String, char:String):Number {
+					var count:Number = 0;
+
+					for(var i:Number=0; i < str.length; i++) {
+						if (str.charAt(i) == char) {
+							count++;
+						}
+					}
+					return count;
+				}
+
+				return countOccurences(str, char);
+		}
+		primTable["replaceEvery"]		= function(b:*):* {
+				var str:String = interp.arg(b, 1);
+				var search:String = interp.arg(b, 0);
+				var replace:String = interp.arg(b, 2);
+
+				function strReplace(str:String, search:String, replace:String):String {
+					return str.split(search).join(replace);
+				}
+				return strReplace(str, search, replace);
+		}
+
+		primTable["replaceBetween"]		= function(b:*):* {
+				//First, grab the text between the two numbers
+				var s:String = b[2];
+				var n1:int = interp.numarg(interp.arg(b, 0)) - 1;
+				var n2:int = interp.numarg(interp.arg(b, 1));
+				if ((n1 < 0) || (n2 >= s.length)) return "";
+				var sect:String = s.slice(n1, n2);
+				//Then the find-and-replace tactic (FLAWED!!! Can replace two bits of identical text...)
+				var str:String = b[2];
+				var search:String = sect;
+				var replace:String = b[3];
+
+				function strReplace(str:String, search:String, replace:String):String {
+					return str.split(search).join(replace);
+				}
+				return strReplace(str, search, replace);
+		}
+		primTable["repeat::times"]		= function(b:*):* {
+				function repeatString(string:String, numTimes:uint):String {
+					var output:String = "";
+					for(var i:uint = 0; i < numTimes; i++)
+					output += string;
+					return output;
+				}
+				return repeatString(interp.arg(b, 0), interp.arg(b, 1));
+		}*/
 		new LooksPrims(app, interp).addPrimsTo(primTable);
 		new MotionAndPenPrims(app, interp).addPrimsTo(primTable);
 		new SoundPrims(app, interp).addPrimsTo(primTable);
@@ -350,4 +475,88 @@ public class Primitives {
 			}
 		}*/
 	}
-}}
+
+	
+
+
+	private function primRandomJoke(b:Block):*
+	{
+		var jokesArray:Array = [
+								"Why don't scientists trust atoms? Because they make up everything!",
+								"Why did the scarecrow win an award? Because he was outstanding in his field.",
+																"What do you call a fake noodle? An impasta.",
+								"Why do we tell actors to 'break a leg'? Because every play has a cast.",
+								"Why did Beethoven get rid of his chickens? All they ever said was, 'Bach, Bach, Bach!'",
+									"Why cannot you put two half-dollars in your pocket? Because two halves make a hole, and your money will fall out!",
+								"What does a condiment wizard perform? Saucery",
+																"Which is faster, hot or cold? Hot, because you can catch cold.",
+								"Why do bees have sticky hair? Because they use a honeycomb.",
+																"Why couldn't the bicycle stand up by itself? It was two tired.",
+								"Why do fish have bad grades? Because they never go above sea.",
+																"What do you get when you cross a catepillar and a parrot? A walkie talkie.",
+																"The Sun is Hot[citation needed]",
+																"The leading cause of dry skin is towels.",
+																"Stop hating on Lazy people, we didn't even do anything",
+								];
+
+															// 2. Generate a random index based on the array's length
+															// Math.random() * jokesArray.length gives a decimal from 0 to 3.999...
+															// Math.floor() rounds it down to a whole integer (0, 1, 2, or 3)
+		var randomIndex:int = Math.floor(Math.random() * jokesArray.length);
+
+															// 3. Fetch and display the joke
+		var randomJokeResult:String = jokesArray[randomIndex];
+
+		return(randomJokeResult);
+	}
+
+	/*private function primAlterString(b:Block):String {
+		var string:* = interp.arg(b, 1);
+		var type:* = interp.arg(b,0);
+		switch(type) {
+		case "uppercase": return string.toUpperCase();
+		case "lowercase": return string.toLowerCase();
+		case "reverse": return reverseString(string);
+		case "shuffle": return initRandomizeArray(string);
+		case "trim blanks of": return trimBlanks(string);
+		}
+		return ""; //Just return a blank string upon error
+	}
+	
+	private function reverseString(tString:String):String {
+		var tmp_array:Array=tString.split("");
+		tmp_array.reverse();
+		var tmpString:String=tmp_array.join("");
+		return tmpString;
+	}
+	
+	private function initRandomizeArray(string:String):String {
+		var tmp_array:Array = string.split("");
+		return randomizeArray(tmp_array);
+	}
+	
+	private function randomizeArray(array:Array):String {
+		var newArray:Array = new Array();
+		while(array.length > 0){
+			newArray.push(array.splice(Math.floor(Math.random()*array.length), 1));
+		}
+		var tmpString:String = newArray.join("");
+		return tmpString;
+	}
+	
+	private function trimBlanks(str:String):String {
+		var rex:RegExp = /[\s\r\n]+/gim;
+		str = str.replace(rex,'');
+		return str;
+	}
+
+	private function primLettersBetween(b:Block):String {
+		var s:String = interp.arg(b, 2);
+		var n1:int = interp.numarg(b[0]) - 1;
+		var n2:int = interp.numarg(b[1]);
+		if ((n1 < 0) || (n2 >= s.length)) return "";
+		return s.slice(n1, n2);
+	}*/
+
+}
+}

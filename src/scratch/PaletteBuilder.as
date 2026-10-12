@@ -107,12 +107,17 @@ public class PaletteBuilder {
 				var defaultArgs:Array = targetObj.defaultArgsFor(spec[3], spec.slice(4));
 				var label:String = spec[0];
 				if (targetObj.isStage && spec[3] == 'whenClicked') label = 'when Stage clicked';
-				var block:Block = new Block(label, spec[1], blockColor, spec[3], defaultArgs);
+				if (spec[3] == 'sensor'){
+					var block:Block = new Block(label, spec[1], 0x404040, spec[3], defaultArgs);
+				}else{
+					var block:Block = new Block(label, spec[1], blockColor, spec[3], defaultArgs);
+				}
 				var showCheckbox:Boolean = isCheckboxReporter(spec[3]);
 				if (showCheckbox) addReporterCheckbox(block);
 				if (!(category == 13 && app.experimentEnabled)){
-				addItem(block, showCheckbox);
-				cmdCount++;
+						addItem(block, showCheckbox);
+						cmdCount++;
+					
 				}
 			} else {
 				if ((spec.length == 1) && (cmdCount > 0)) nextY += 10 * spec[0].length; // add some space
